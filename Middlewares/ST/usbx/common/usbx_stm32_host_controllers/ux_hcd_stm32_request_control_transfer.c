@@ -402,9 +402,20 @@ UCHAR                   *setup_request;
     /* Check if device connected to hub  */
     if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
     {
-      HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
-                            endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
-                            endpoint->ux_endpoint_device->ux_device_port_location);
+      struct UX_DEVICE_STRUCT *hub = endpoint->ux_endpoint_device->ux_device_parent;
+      do
+      {
+        if (hub->ux_device_speed == UX_HIGH_SPEED_DEVICE)
+        {
+          HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                                hub->ux_device_address, hub->ux_device_port_location);
+          break;
+        }
+        else
+        {
+          hub = hub->ux_device_parent;
+        }
+      } while (hub != NULL);
     }
 #endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
@@ -436,9 +447,20 @@ static inline VOID _ux_hcd_stm32_request_control_data(UX_HCD_STM32 *hcd_stm32,
         /* Check if device connected to hub  */
         if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
         {
-          HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
-                                endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
-                                endpoint->ux_endpoint_device->ux_device_port_location);
+          struct UX_DEVICE_STRUCT *hub = endpoint->ux_endpoint_device->ux_device_parent;
+          do
+          {
+            if (hub->ux_device_speed == UX_HIGH_SPEED_DEVICE)
+            {
+              HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                                    hub->ux_device_address, hub->ux_device_port_location);
+              break;
+            }
+            else
+            {
+              hub = hub->ux_device_parent;
+            }
+          } while (hub != NULL);
         }
 #endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
@@ -509,9 +531,20 @@ static inline VOID _ux_hcd_stm32_request_control_status(UX_HCD_STM32 *hcd_stm32,
     /* Check if device connected to hub  */
     if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
     {
-      HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
-                            endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
-                            endpoint->ux_endpoint_device->ux_device_port_location);
+      struct UX_DEVICE_STRUCT *hub = endpoint->ux_endpoint_device->ux_device_parent;
+      do
+      {
+        if (hub->ux_device_speed == UX_HIGH_SPEED_DEVICE)
+        {
+          HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                                hub->ux_device_address, hub->ux_device_port_location);
+          break;
+        }
+        else
+        {
+          hub = hub->ux_device_parent;
+        }
+      } while (hub != NULL);
     }
 #endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
